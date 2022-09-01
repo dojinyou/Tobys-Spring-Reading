@@ -7,13 +7,15 @@ import java.sql.SQLException;
 
 public abstract class UserDao {
 
-  public static final String HOST_URI = "jdbc:mysql://localhost:33306/topring?useUnicode=true&serverTimezone=Asia/Seoul&useSSL=false";
-  public static final String DB_USER_NAME = "root";
-  public static final String DB_USER_PASSWORD = "mysql";
-  public static final String DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
+  private SimpleConnectionMaker simpleConnectionMaker;
+
+  public UserDao() {
+     simpleConnectionMaker = new SimpleConnectionMaker();
+  }
+
 
   public void add(User user) throws ClassNotFoundException, SQLException {
-    Connection c = getConnection();
+    Connection c = simpleConnectionMaker.makeNewConnection();
 
     PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
     ps.setString(1, user.getId());
@@ -29,7 +31,7 @@ public abstract class UserDao {
   }
 
   public User get(String id) throws ClassNotFoundException, SQLException {
-    Connection c = getConnection();
+    Connection c = simpleConnectionMaker.makeNewConnection();
 
     PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
     ps.setString(1, id);
@@ -50,10 +52,6 @@ public abstract class UserDao {
       return user;
     }
   }
-
-  protected abstract Connection getConnection() throws SQLException, ClassNotFoundException;
-  // Class.forName(DRIVER_CLASS_NAME);
-  // return DriverManager.getConnection(HOST_URI, DB_USER_NAME, DB_USER_PASSWORD);
 
   public static void main(String[] args) throws ClassNotFoundException, SQLException {
     UserDao dao = new UserDao();
