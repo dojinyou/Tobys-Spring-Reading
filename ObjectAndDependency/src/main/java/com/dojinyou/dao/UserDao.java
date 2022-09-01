@@ -1,12 +1,11 @@
 package com.dojinyou.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserDao {
+public abstract class UserDao {
 
   public static final String HOST_URI = "jdbc:mysql://localhost:33306/topring?useUnicode=true&serverTimezone=Asia/Seoul&useSSL=false";
   public static final String DB_USER_NAME = "root";
@@ -28,7 +27,6 @@ public class UserDao {
       ps.executeUpdate();
     }
   }
-
 
   public User get(String id) throws ClassNotFoundException, SQLException {
     Connection c = getConnection();
@@ -53,10 +51,9 @@ public class UserDao {
     }
   }
 
-  private static Connection getConnection() throws SQLException, ClassNotFoundException {
-    Class.forName(DRIVER_CLASS_NAME);
-    return DriverManager.getConnection(HOST_URI, DB_USER_NAME, DB_USER_PASSWORD);
-  }
+  protected abstract Connection getConnection() throws SQLException, ClassNotFoundException;
+  // Class.forName(DRIVER_CLASS_NAME);
+  // return DriverManager.getConnection(HOST_URI, DB_USER_NAME, DB_USER_PASSWORD);
 
   public static void main(String[] args) throws ClassNotFoundException, SQLException {
     UserDao dao = new UserDao();
