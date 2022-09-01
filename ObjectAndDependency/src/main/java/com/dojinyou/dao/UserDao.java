@@ -14,8 +14,7 @@ public class UserDao {
   public static final String DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
 
   public void add(User user) throws ClassNotFoundException, SQLException {
-    Class.forName(DRIVER_CLASS_NAME);
-    Connection c = DriverManager.getConnection(HOST_URI, DB_USER_NAME, DB_USER_PASSWORD);
+    Connection c = getConnection();
 
     PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
     ps.setString(1, user.getId());
@@ -30,9 +29,9 @@ public class UserDao {
     }
   }
 
+
   public User get(String id) throws ClassNotFoundException, SQLException {
-    Class.forName(DRIVER_CLASS_NAME);
-    Connection c = DriverManager.getConnection(HOST_URI, DB_USER_NAME, DB_USER_PASSWORD);
+    Connection c = getConnection();
 
     PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
     ps.setString(1, id);
@@ -52,6 +51,11 @@ public class UserDao {
 
       return user;
     }
+  }
+
+  private static Connection getConnection() throws SQLException, ClassNotFoundException {
+    Class.forName(DRIVER_CLASS_NAME);
+    return DriverManager.getConnection(HOST_URI, DB_USER_NAME, DB_USER_PASSWORD);
   }
 
   public static void main(String[] args) throws ClassNotFoundException, SQLException {
