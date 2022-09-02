@@ -21,10 +21,7 @@ public class UserDao {
     ps.setString(2, user.getName());
     ps.setString(3, user.getPassword());
 
-    try (
-        c;
-        ps
-    ) {
+    try (c; ps) {
       ps.executeUpdate();
     }
   }
@@ -36,11 +33,7 @@ public class UserDao {
     ps.setString(1, id);
     ResultSet rs = ps.executeQuery();
 
-    try (
-        c;
-        rs;
-        ps
-    ) {
+    try (c; rs; ps) {
       rs.next();
 
       User user = new User();
